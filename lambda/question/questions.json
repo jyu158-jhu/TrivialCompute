@@ -7,11 +7,18 @@
   "difficulty": ""
 }
 
+{
+  "category_name": "general",
+  "question_text": "Which country is known as the Land of the Rising Sun?",
+  "answer": "Japan",
+  "media_url": "",
+  "difficulty": ""
+}
 
 {
   "category_name": "general",
-  "question_text": "What is the tallest mountain in the world?",
-  "answer": "Mount Everest",
+  "question_text": "What is the largest desert in the world?",
+  "answer": "Sahara Desert",
   "media_url": "",
   "difficulty": ""
 }
