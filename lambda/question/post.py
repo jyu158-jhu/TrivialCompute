@@ -20,27 +20,35 @@ table = dynamodb.Table('Questions')
 # }
 
 def lambda_handler(event, context):
-    question_id = 'que_' + hash_string(event['question_text'].lower())
+    print(f"event={event}")
+    print(f"context={context}")
+    
+    request_body = json.loads(event['body'])
+    
+    question_id = 'que_' + hash_string(request_body['question_text'].lower())
     question={
         'id': question_id,
-        'category_name': event['category_name'],
-        'question_text': event['question_text'],
-        'media_url': event['media_url'],
-        'difficulty': event['difficulty'],
-        'answer': event['answer'].lower()
+        'category_name': request_body['category_name'],
+        'question_text': request_body['question_text'],
+        'media_url': request_body['media_url'],
+        'difficulty': request_body['difficulty'],
+        'answer': request_body['answer'].lower()
     }
     print(f'question={question}')
 
     existing_question = table.get_item(Key={"id": question_id})
     print(f'existing_question={existing_question}')
     if 'Item' in existing_question:
-        response = create_response(existing_question['Item']) 
+        body = create_body(existing_question['Item']) 
     else:
         new_question = table.put_item(Item=question,ReturnValues='ALL_OLD')
         print(f'created={new_question}')
-        response = create_response(question)
+        body = create_body(question)
         
-    return response
+    return {
+        'statusCode': 200,
+        'body': json.dumps(body)
+    }
 
 
 def hash_string(string):
@@ -56,7 +64,7 @@ def hash_string(string):
 #   "media_url": "string",
 #   "difficulty": "string"
 # }
-def create_response(item):
+def create_body(item):
     return {
         'id': item['id'],
         'category_name': item['category_name'],
