@@ -11,6 +11,7 @@ dynamodb = boto3.resource('dynamodb')
 table_game = dynamodb.Table('Games')
 table_category = dynamodb.Table('Categories')
 table_question = dynamodb.Table('Questions')
+table_player = dynamodb.Table('Players')
 
 
 def get_categories():
@@ -46,12 +47,21 @@ def hash_string(string):
 # }
 def create_player(game_id, name, order):
     player = {
-        'player_id': "player_" + hash_string(game_id + "_" + name),
+        'id': "player_" + hash_string(game_id + "_" + name),
+        'game_id': game_id,
         'player_name': name,
         'score': 0,
         'turn_order': order
     }
-    return player  
+    table_player.put_item(Item=player)
+
+    response = {
+        'player_id': player['id'],
+        'player_name': name,
+        'score': 0,
+        'turn_order': order
+    }
+    return response  
     
 
 # {
