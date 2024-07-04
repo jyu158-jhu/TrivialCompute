@@ -11,11 +11,17 @@ dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table('Categories')
 
 def lambda_handler(event, context):
-    category_id = 'cat_' + hash_string(event['name'].lower())
+    print(f"event={event}")
+    print(f"context={context}")
+
+    request_body = json.loads(event['body'])
+    print(f"request_body={request_body}")
+
+    category_id = 'cat_' + hash_string(request_body['name'].lower())
     category={
         'id': category_id,
-        'name': event['name'].lower(),
-        'color': event['color'].lower()
+        'name': request_body['name'].lower(),
+        'color': request_body['color'].lower()
     }
     print(f'category={category}')
 
@@ -28,7 +34,10 @@ def lambda_handler(event, context):
         print(f'created={new_category}')
         response = create_response(category)
         
-    return response
+    return {
+        'statusCode': 200,
+        'body': json.dumps(response)
+    }
 
 
 def hash_string(string):
