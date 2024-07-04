@@ -1,0 +1,92 @@
+[
+  {
+    "category_name": "literature",
+    "question_text": "Who wrote \"Pride and Prejudice\"?",
+    "answer": "Jane Austen",
+    "media_url": ""
+  },
+  {
+    "category_name": "literature",
+    "question_text": "What is the title of the first book in the \"Harry Potter\" series?",
+    "answer": "Harry Potter and the Sorcerer's Stone",
+    "media_url": ""
+  },
+  {
+    "category_name": "literature",
+    "question_text": "Who is the author of \"1984\" and \"Animal Farm\"?",
+    "answer": "George Orwell",
+    "media_url": ""
+  },
+  {
+    "category_name": "literature",
+    "question_text": "In which Shakespeare play does the character of Othello appear?",
+    "answer": "Othello",
+    "media_url": ""
+  },
+  {
+    "category_name": "literature",
+    "question_text": "What is the name of the fictional detective created by Arthur Conan Doyle?",
+    "answer": "Sherlock Holmes",
+    "media_url": ""
+  },
+  {
+    "category_name": "literature",
+    "question_text": "Who wrote \"To Kill a Mockingbird\"?",
+    "answer": "Harper Lee",
+    "media_url": ""
+  },
+  {
+    "category_name": "literature",
+    "question_text": "What is the first name of Dr. Jekyll in \"The Strange Case of Dr Jekyll and Mr Hyde\"?",
+    "answer": "Henry",
+    "media_url": ""
+  },
+  {
+    "category_name": "literature",
+    "question_text": "Who wrote the epic poem \"Paradise Lost\"?",
+    "answer": "John Milton",
+    "media_url": ""
+  },
+  {
+    "category_name": "literature",
+    "question_text": "What is the setting of the novel \"Moby-Dick\"?",
+    "answer": "A whaling ship called the Pequod",
+    "media_url": ""
+  },
+  {
+    "category_name": "literature",
+    "question_text": "Who is the protagonist of the novel \"The Great Gatsby\"?",
+    "answer": "Nick Carraway",
+    "media_url": ""
+  },
+  {
+    "category_name": "literature",
+    "question_text": "Who wrote \"Brave New World\"?",
+    "answer": "Aldous Huxley",
+    "media_url": ""
+  },
+  {
+    "category_name": "literature",
+    "question_text": "What is the name of the wizard in J.R.R. Tolkien's \"The Lord of the Rings\"?",
+    "answer": "Gandalf",
+    "media_url": ""
+  },
+  {
+    "category_name": "literature",
+    "question_text": "Which novel begins with the line \"Call me Ishmael\"?",
+    "answer": "\"Moby-Dick\" by Herman Melville",
+    "media_url": ""
+  },
+  {
+    "category_name": "literature",
+    "question_text": "Who wrote \"The Catcher in the Rye\"?",
+    "answer": "J.D. Salinger",
+    "media_url": ""
+  },
+  {
+    "category_name": "literature",
+    "question_text": "Who is the main character in \"Jane Eyre\" by Charlotte Brontë?",
+    "answer": "Jane Eyre",
+    "media_url": ""
+  }
+]
