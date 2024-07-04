@@ -31,20 +31,20 @@ def replace_decimals(obj):
     else:
         return obj
 
-def get_categories():
+def get_categories(category_count):
     scan_kwargs = {
-        "Limit": 4
-    }    
+        "Limit": category_count
+    }
     categories = table_category.scan(**scan_kwargs)
     print(f"categories={categories}")
     return categories['Items']
 
 
-def get_questions(category_name):
+def get_questions(category_name, count):
     questions = table_question.query(
         IndexName="category_name-index",
         KeyConditionExpression=boto3.dynamodb.conditions.Key('category_name').eq(category_name),
-        Limit=4
+        Limit=count
     )
     
     # print(f"category={category_name}, questions={questions}")
@@ -57,63 +57,54 @@ def hash_string(string):
     return h.hexdigest()
 
 # {
-#   "player_id": "string",
-#   "player_name": "string",
 #   "score": "integer",
 #   "turn_order": "integer"
 # }
-def create_player(game_id, name, order):
+def create_player(order):
     player = {
-        'id': "player_" + hash_string(game_id + "_" + name),
-        'game_id': game_id,
-        'player_name': name,
         'score': 0,
         'turn_order': order
     }
-    table_player.put_item(Item=player)
 
-    response = {
-        'player_id': player['id'],
-        'player_name': name,
-        'score': 0,
-        'turn_order': order
-    }
-    return response  
+    return player  
     
 # {
-#   "players": ["string"]
+#   "players": ["string"],
+#   "category_count": int,
+#   "questions_per_category": int,
 # }
 def create_game(request_body):
     now = time.time()
     
     game_id = 'game_' + hash_string(str(now) + str(request_body['players']))
     
-    players = []
+    players = {}
     for index, player_name in enumerate(request_body['players']):
-        player = create_player(game_id, player_name, index)
-        players.append(player)
+        player = create_player(index)
+        players[player_name] = player
 
-    squares = []
-    categories = get_categories()
+    category_count = request_body["category_count"]
+    questions_per_category = request_body["questions_per_category"]
+
+    squares = {}
+    categories = get_categories(category_count)
     for c_id, c in enumerate(categories):
-        questions = get_questions(c['name'])
+        questions = get_questions(c['name'], questions_per_category)
         for q_id, q in enumerate(questions):
-            square = {
-                "position": {
-                    "facet": c_id,
-                    "position_id": q_id 
-                },
-                "question": {
-                    "question_id": q["id"],                    
-                    "question_text": q["question_text"],                    
-                    "media_url": q["media_url"],                    
-                    "category_name": c["name"],                    
-                    "category_color": c["color"],                    
-                }
+            square_position = f"{c_id},{q_id}"
+            question= {
+                "question_id": q["id"],
+                "question_text": q["question_text"],
+                "media_url": q["media_url"],
+                "category_name": c["name"],
+                "category_color": c["color"],
+                "answered_by": "",
+                "answered_at": 0,
+                "answer": "",
+                "answer_score": 0
             }
-            squares.append(square)
-            print(square)
-    
+            squares[square_position] = question
+
     game = {
         "id": game_id,
         "created_at": int(now),
@@ -129,6 +120,43 @@ def create_game(request_body):
         'body': json.dumps(game)
     }
 
+def update_square(game, square_position, player_name, answer):
+    question_id = game["squares"][square_position]["question_id"]
+    question_response = table_question.get_item(Key={"id": question_id})
+    question = question_response["Item"]
+    print(f"question={question}")
+
+    actual_answer = question["answer"]
+
+    now = int(time.time())
+    game['squares'][square_position]["answer"] = answer
+    game['squares'][square_position]["answered_at"] = now
+    game['squares'][square_position]["answered_by"] = player_name
+
+    result = False
+    if actual_answer == answer.lower():
+        game["player"][player_name]["score"] += 1
+        game['squares'][square_position]["answer_score"] = 1
+        result = True
+
+    return result, game
+
+
+def check_game_end(game):
+    for square in game["squares"].values():
+        if square["answered_at"] == 0:
+            return False
+    return True
+
+# {
+#     "operation": "update",
+#     "data": {
+#         "id": "game_bbd72496707d12ccedf2fd334838e02f",
+#         "position": "0,0",
+#         "player_name": "player_a",
+#         "answer": "Carbon Dioxide"
+#     }
+# }
 def update_game(data):
     game_id = data['id']
 
@@ -136,6 +164,12 @@ def update_game(data):
         KeyConditionExpression=boto3.dynamodb.conditions.Key('id').eq(game_id)
     )
     
+    if "Items" not in games:
+        return {
+            'statusCode': 400,
+            'body': f"invalid game id: {game_id}"
+        }
+        
     items = games["Items"]
     converted = replace_decimals(items)
     game = converted[0]
@@ -143,41 +177,60 @@ def update_game(data):
     
     if game['status'] == 'ready':
         game['status'] = 'started'
-    
-    question_id = data['question_id']
-    question_response = table_question.get_item(Key={"id": question_id})
-    question = question_response["Item"]
-    print(f"question={question}")
+    elif game['status'] == 'finished':
+        return {
+            'statusCode': 400,
+            'body': f"game has finished"
+        }
 
-    actual_answer = question["answer"]
-    attempted_answer = data["answer"].lower()
-    if actual_answer == attempted_answer:
-        player_id = data['player_id']
-        player_response = table_player.get_item(Key={"id": player_id})
-        print(f"player_response={player_response}")
-        player = player_response["Item"]
-        
-        table_player.update_item(
-            Key={'id': player_id},
-            AttributeUpdates={
-                'score': player["score"] + 1
-            },
-        )
-        
+    position = data["position"]
+    answer = data["answer"].lower()
+    player_name = data["player_name"]
+
+    result, updated_game = update_square(game, position, player_name, answer)
+    print(f"updated_game={updated_game}")
+    
+    if check_game_end(game):
+        game['status'] = 'finished'
+    
+    table_game.put_item(Item=updated_game)
+
+    response = {
+        "result": result,
+        "updated_game": updated_game
+    }
     return {
         'statusCode': 200,
-        'body': json.dumps(game)
+        'body': json.dumps(response)
     }
+
 
 def lambda_handler(event, context):
     print(f"event={event}")
     print(f"context={context}")
 
     request_body = json.loads(event['body'])
+    print(f"request_body={request_body}")
+
+    if 'operation' not in request_body:
+        return {
+            'statusCode': 400,
+            'body': f'request body misses operation'
+        }
+
+    if 'data' not in request_body:
+        return {
+            'statusCode': 400,
+            'body': f'request body misses data'
+        }
+
     operation = request_body['operation']
     if operation == 'create':
         return create_game(request_body['data'])
     elif operation == 'update':
         return update_game(request_body['data'])
     
-    raise ValueError(f'Unrecognized operation "{operation}"')
+    return {
+        'statusCode': 400,
+        'body': f'Unrecognized operation "{operation}"'
+    }
