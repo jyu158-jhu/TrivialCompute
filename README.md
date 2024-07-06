@@ -5,17 +5,17 @@ Here's a basic design for the RESTful API for the Trivial Compute game, covering
 ## Example API Workflow
 ### Setup before starting games
 
-Create a new category (POST /categories)
-Create a list of question (POST /questions)
+- Create a new category (POST /categories)
+- Create a list of question (POST /questions)
 
 ### Game flow
 
-Create a new game board (POST /games)
-Post an answer to a square on the board (POST /games)
+- Create a new game board (POST /games)
+- Post an answer to a square on the board (POST /games)
 
 ### Postgame
-	
-Get game details, including players and asked questions (GET /games/{game_id})
+
+- Get game details, including players and asked questions (GET /games/{game_id})
 
 ## Endpoints
 ### Categories
