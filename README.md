@@ -1,6 +1,6 @@
 # Trivial Compute API
 
-Here's a basic design for the RESTful API for the Trivial Compute game, covering endpoints for games, players, questions, categories, and game board squares.
+Here's a basic design for the RESTful API for the Trivial Compute game, covering endpoints for games, questions, categories, and game board squares.
 
 ## Example API Workflow
 ### Setup before starting games
