@@ -23,7 +23,7 @@ Get game details, including players and asked questions (GET /games/{game_id})
 ```
 POST /categories
 ```
-    
+
 Request Body:
 ```
 {
@@ -42,6 +42,8 @@ Response:
 ```
 
 https://jthtbqx5pk.execute-api.us-west-2.amazonaws.com/prod/categories 
+<img width="770" alt="image" src="https://github.com/jyu158-jhu/TrivialCompute/assets/173595847/16051716-208b-4a42-b459-f88633363a91">
+<img width="766" alt="image" src="https://github.com/jyu158-jhu/TrivialCompute/assets/173595847/d003a2d3-3c8e-4564-b6b4-9582156049ec">
 
 
 #### Get all categories
@@ -59,6 +61,7 @@ Response:
   }
 ]
 ```
+<img width="771" alt="image" src="https://github.com/jyu158-jhu/TrivialCompute/assets/173595847/72464e24-78fe-4078-8bb2-b46a62c13eb7">
 
 
 ### Questions
@@ -95,6 +98,8 @@ Response:
 ```
 
 https://8dibhaiy86.execute-api.us-west-2.amazonaws.com/prod/questions 
+<img width="760" alt="image" src="https://github.com/jyu158-jhu/TrivialCompute/assets/173595847/9825a06d-3f46-4dd9-a356-86959802b75b">
+<img width="770" alt="image" src="https://github.com/jyu158-jhu/TrivialCompute/assets/173595847/5b32708d-04a3-4633-ab25-93844a9f8e1a">
 
 
 #### Get question details
@@ -115,6 +120,8 @@ Response:
 
 https://8dibhaiy86.execute-api.us-west-2.amazonaws.com/prod/questions?category=literature 
 
+<img width="763" alt="image" src="https://github.com/jyu158-jhu/TrivialCompute/assets/173595847/30bbf96c-c10e-476b-9fef-2a71673f7a62">
+<img width="773" alt="image" src="https://github.com/jyu158-jhu/TrivialCompute/assets/173595847/2248475b-f320-4f01-8582-fd1e85a31d45">
 
 
 ### Games
@@ -164,6 +171,8 @@ Response:
 ```
 
 https://8dwqjz2mlb.execute-api.us-west-2.amazonaws.com/prod/games
+<img width="760" alt="image" src="https://github.com/jyu158-jhu/TrivialCompute/assets/173595847/5a40fd3a-8fb8-4234-b852-b39e0be209af">
+<img width="772" alt="image" src="https://github.com/jyu158-jhu/TrivialCompute/assets/173595847/13490732-53b2-43de-8b72-4d22f8fabe4e">
 
 
 #### Get game details
@@ -199,6 +208,7 @@ Response:
 }
 ```
 
+<img width="756" alt="image" src="https://github.com/jyu158-jhu/TrivialCompute/assets/173595847/089d32b7-6c1d-4107-843a-c63f59ec6686">
 
 
 ### Answer a square on a game board square
@@ -244,7 +254,6 @@ Response:
 }
 ```
 
+<img width="767" alt="image" src="https://github.com/jyu158-jhu/TrivialCompute/assets/173595847/ccecfaa8-d8ce-4b83-b00e-2bc9ca7b75ac">
+<img width="769" alt="image" src="https://github.com/jyu158-jhu/TrivialCompute/assets/173595847/f306e8c8-4dde-4a7d-9f7f-d4bce62f8b5e">
 
-
-
-Github Repo
